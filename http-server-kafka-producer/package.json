@@ -1,0 +1,24 @@
+{
+    "name": "targeting-items",
+    "version": "0.1.0",
+    "author": "TrieuNT",
+    "description": "nodejs based targeting delivery system",
+    "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "keywords": [
+
+        "http",
+        "server"
+
+    ],
+    "dependencies": {
+        "redis": "~0.8.4",
+        "hiredis": "~0.1.15"
+    },
+    "engine": {
+        "node": ">=0.8"
+    }
+}
