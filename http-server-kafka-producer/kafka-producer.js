@@ -13,6 +13,9 @@ var express = require('express');
 var app = express();
 
 producer.on('ready', function () {
+
+    var kafkaTopic = 'user-activity';
+
     app.get('/test-log-kafka', function(req, res){
         res.status(200);
         res.set('Content-Type', 'text/html');
@@ -26,9 +29,10 @@ producer.on('ready', function () {
         logFields.push("http://sohoa.vnexpress.net/photo/do-choi-so/anh-va-video-thuc-te-dong-ho-thong-minh-apple-watch-3077240.html");
 
         var msg = logFields.join('\t');
+        var partitionId = 1;
         var payloads = [
-            { topic: 'user-activity', messages: msg, partition: 1 }
-        ]
+            { topic: kafkaTopic, messages: msg, partition: partitionId }
+        ];
 
         producer.send(payloads, function (err, data) {
             console.log(data);
