@@ -7,7 +7,8 @@
 var fibrous = require('fibrous');
 var fs = require('fs');
 var readFile = fibrous(function () {
-    return fs.sync.readFile('/home/trieu/data/redis-247-6486.txt');
+    var path = "/home/trieunt/data/redis-247-6486-dump.txt";
+    return fs.sync.readFile(path);
 });
 
 function runImportData() {
