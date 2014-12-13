@@ -1,0 +1,118 @@
+<html>
+  <head>
+
+    <title>REAL TIME Node.js, Redis and Socket.IO</title>
+   
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost:3001/file?name=heatmap.js"></script>    
+    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+   
+     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {
+            font-family: sans-serif;
+        }
+        body * {
+            font-weight: 200;
+        }
+        #heatmapContainerWrapper {
+            width: 100%;
+            height: 5000px;
+            position: absolute;
+            background-image: url("http://localhost:3001/file?name=lazada.demo.png");
+            background-repeat : no-repeat;
+        }
+        #heatmapContainer {
+            width: 100%;
+            height: 100%;
+        }
+        h1 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: white;
+            padding: 10px;
+        }
+    </style>
+  </head>
+
+
+  <body>
+    <table>
+      <tr style="width:100%; height: 200px;"> 
+        <td>Pageview: </td>
+        <td align="center" style="width: 30%; height: 100%; border: 1px solid #000;" >
+            <p id="online" style="font-size: 100px;">0</p>
+        </td>
+     </tr>
+  </table>
+
+
+<div id="heatmapContainerWrapper" >
+    <div id="heatmapContainer">
+    </div>
+</div>
+
+<script>
+  var points = [];
+  var heatmap ;
+  window.onload = function () {
+        // create a heatmap instance
+        heatmap = h337.create({
+            container: document.getElementById('heatmapContainer'),
+            maxOpacity: .7,
+            radius: 20,
+            blur: .60
+            // backgroundColor with alpha so you can see through it
+            // backgroundColor: 'rgba(0, 0, 58, 0.96)'
+        }); 
+  };
+
+        var socket = io.connect('http://localhost:3000/');
+
+        socket.on('connect', function(data){
+          setStatus('connected');
+          socket.emit('subscribe', {channel:'realtime'});
+        });
+
+        socket.on('reconnecting', function(data){
+          setStatus('reconnecting');
+        });
+
+        socket.on('message', function (data) {
+          //console.log('received a message: ', data);
+            addMessage(data);
+        });
+
+        function addMessage(data) {
+            //console.log(data);
+            var jsonObj = JSON.parse(data);
+            if(jsonObj.pageview){
+              $('#online').html(jsonObj.pageview);
+            } else if(jsonObj.heats){
+                var list = jsonObj.heats;
+                for(var i=0;i<list.length;i++){
+                    var p = list[i];
+                    console.log('p: ', p);
+                    heatmap.addData(p);
+                }
+            }
+        }
+
+        function setStatus(msg) {
+            console.log('Connection Status : ' + msg);
+        } 
+     
+
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,23 @@
+{
+  "name" : "node.js",
+  "description" : "Realtime stats using node.js, socket.io and redis",
+  "version" : "0.0.1",
+  "author": {
+    "name": "Trieu",
+    "email": "tantrieuf31@gmail.com"
+  },
+  "dependencies" : {
+    "redis": "",
+    "socket.io": "",
+    "express": "",
+    "phantom" : ""
+  },
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/trieu/nodejs-tools"
+  },
+  "engines" : { 
+    "node": ">=0.4.0" 
+  }
+}
+
