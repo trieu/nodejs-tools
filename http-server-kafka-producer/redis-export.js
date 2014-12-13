@@ -3,8 +3,8 @@
  */
 var RedisDump = require('node-redis-dump'),
     dump = new RedisDump({
-        host: 'localhost',
-        port: 6379,
+        host: '10.254.53.247',
+        port: 6486,
         password: ''
     });
 
@@ -19,7 +19,18 @@ dump.export({
         }
 
         console.log('--------- REDIS DUMP ----------');
-        console.log(data);
+        //console.log(data);
+
+        var fs = require('fs');
+        var path = "/home/trieunt/data/redis-247-6486-dump.txt";
+        fs.writeFile(path, data, function(err) {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("The data was saved at "+path);
+            }
+        });
+
         console.log('--------- /REDIS DUMP ----------');
     }
 });
