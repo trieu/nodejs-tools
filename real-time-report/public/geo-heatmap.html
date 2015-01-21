@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>RFX-Report: Real-time Geo Location Heatmap</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <style>
+        body, html { margin:0; padding:0; height:100%;}
+        body { font-family:sans-serif; }
+        body * { font-weight:200;}
+
+
+        .leaflet-container {
+            background: rgba(0,0,0,.8) !important;
+        }
+    </style>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost:3001/file?name=heatmap.js"></script>
+    <script type="text/javascript" src="http://localhost:3001/file?name=leaflet-heatmap.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+</head>
+<body>
+<h1>RFX-Report: Real-time Geo Location Heatmap</h1>
+
+<div id="map" style="width: 900px; height: 750px; margin-top: 5px;" ></div>
+<script>
+    window.onload = function () {
+
+        var testData = {
+            max: 8,
+            data: [
+                {lat: 35.8278, lng: -78.6421, count: 1}
+            ]
+        };
+
+        var baseLayer = L.tileLayer(
+                'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                    maxZoom: 18
+                }
+        );
+
+        var cfg = {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            "radius": 1,
+            "maxOpacity": .4,
+            // scales the radius based on map zoom
+            "scaleRadius": true,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'count'
+        };
+
+
+        var heatmapLayer = new HeatmapOverlay(cfg);
+
+        var map = new L.Map('map', {
+            center: new L.LatLng(10.75,  106.66),
+            zoom: 4,
+            layers: [baseLayer, heatmapLayer]
+        });
+
+        heatmapLayer.setData(testData);
+
+        // make accessible for debugging
+        layer = heatmapLayer;
+
+        setInterval(function(){
+            heatmapLayer.addData( {lat: 10.751, lng: 106.662, count: 6});
+            heatmapLayer.addData( {lat: 10.392, lng: 105.416, count: 1});
+            heatmapLayer.addData( {lat: 9.873, lng: 105.633, count: 1});
+
+            heatmapLayer.addData( {lat: 18.648, lng: 105.562, count: 1});
+            heatmapLayer.addData( {lat: 16.050, lng: 108.266, count: 2});
+            heatmapLayer.addData( {lat: 16.301, lng: 107.866, count: 1});
+            heatmapLayer.addData( {lat: 11.940, lng: 108.442, count: 1});
+            heatmapLayer.addData( {lat: 21.034, lng: 105.832, count: 3});
+
+        }, 1000);
+    };
+</script>
+</body>
+</html>

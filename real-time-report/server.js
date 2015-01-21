@@ -14,9 +14,14 @@ var express = require('express'),
 var phantom = require('phantom'); 
 var app = express();
 
-app.get('/report', function(req,res) {  
-    var fullPath = __dirname + "/public/client.html";
+app.get('/report', function(req,res) {
+    const fullPath = __dirname + "/public/client.html";
     res.sendFile(fullPath);  
+});
+
+app.get('/geo-heatmap', function(req,res) {
+    const fullPath = __dirname + "/public/geo-heatmap.html";
+    res.sendFile(fullPath);
 });
 
 app.get('/file', function(req,res) {
